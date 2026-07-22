@@ -1,0 +1,13 @@
+Language-Mediated Control (working label)
+Copyright (c) 2026 Brett Reynolds
+
+Text and original figures are licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International License
+(CC BY-NC-ND 4.0): https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+This license is provisional during serialization and will be revisited at
+public launch; see DECISIONS.md. The bibliography snapshot (references.bib)
+is shared infrastructure from the author's portfolio.
+
+Build tooling (Makefile and any scripts) is licensed under the MIT License:
+https://opensource.org/licenses/MIT

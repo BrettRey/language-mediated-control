@@ -1,0 +1,24 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Language-Mediated Control"
+  author: "Brett Reynolds"
+  date: last-modified
+  repo-url: https://github.com/BrettRey/language-mediated-control
+  repo-actions: [issue]
+  chapters:
+    - index.qmd
+
+bibliography:
+  - references.bib
+  - references-local.bib
+
+format:
+  html:
+    theme:
+      - default
+      - .house-style/quarto-theme.scss
+    toc: true
+    number-depth: 2

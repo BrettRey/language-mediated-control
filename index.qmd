@@ -1,0 +1,11 @@
+# What this is {.unnumbered}
+
+This is a book about a handoff. On one side are the people who evaluate AI systems: eval leads, red-teamers, auditors, the producers of evidence that a system is safe, capable, or compliant. On the other side are the people who decide to deploy those systems and answer for the consequences: CTOs, general counsel, procurement, regulators. The evidence crosses from one side to the other, and right now neither side has a shared standard for what it warrants.
+
+This isn't a gap that better dashboards will close. Control of AI systems and evidence about AI systems both run through natural language, and that one channel imports two problem families engineering treats as solved: pragmatics (what counts as an instruction, whose instruction carries authority, whether a string is quoted or commanded) and projection (what an evaluation result licenses anyone to predict about a deployment). Security failures are the stress case, where an adversary exploits both at once. Assurance failures are the quiet case, where nobody exploits anything and the handoff fails anyway.
+
+Every chapter opens with a real case, verified against primary sources, and closes with a question the case forces: what documentation would have had to exist for this failure to be diagnosed? The gap between what the public record shows and what a diagnosis needs is not an inconvenience for the book. It's the argument.
+
+The book is being written in public. Chapters appear here when they reach reviewable-draft quality, free to read. Releases are versioned and logged; a released chapter is never silently rewritten. Disagreement in the margins is welcome and gets treated as data, because where readers split on what a case shows, that split is usually a fact about the construct, not about the readers.
+
+Right now there is nothing here but this page. The thesis and chapter list are being pressure-tested, and the case file is being built. If you want to follow along, the repository is public.
