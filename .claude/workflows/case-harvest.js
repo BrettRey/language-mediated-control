@@ -17,6 +17,18 @@ const CONCEPTS = [
   'undiagnosable: public record too thin to type the failure at all',
 ]
 
+// 2026-07-23 premortem revision 2: the handoff case is the primary query, not the leftovers.
+// Gate 1 does not close while chapter 5 reads "TBD".
+const PRIORITY =
+  'PRIORITY TARGET (spend at least half your effort here): a named, dated, paper-trailed incident in which an ' +
+  'evaluation result, benchmark score, accuracy claim, or vendor assurance document reached a deployment ' +
+  'decision-maker and the deployment failed in a way the cited evidence could never have warranted. Look beyond ' +
+  'chatbot mishaps: procurement disputes and post-mortems citing vendor performance claims, consumer-protection or ' +
+  'FTC-style actions over AI accuracy marketing, contract litigation over AI system performance, government audit ' +
+  'reports on failed AI procurements, clinical or safety deployments withdrawn after field performance diverged ' +
+  'from reported evaluation. If you find NO candidate matching this target, say so explicitly and list the ' +
+  'queries that failed; that negative result is itself decision-relevant.'
+
 const MODALITIES = [
   { key: 'aiid', hint: 'the AI Incident Database (incidentdatabase.ai): browse/search incident entries and their cited reports' },
   { key: 'aiaaic', hint: 'the AIAAIC repository: entries with documented sources' },
@@ -80,9 +92,10 @@ const sweeps = await parallel(MODALITIES.map(m => () =>
   agent(
     'Find documented AI incidents suitable as opening cases for a book on language-mediated control and AI assurance. ' +
     'Search modality: ' + m.hint + '. Use web search/fetch. Up to ' + perMax + ' candidates. ' +
+    PRIORITY + ' ' +
     'STRICT RULES: real incidents only; if you cannot confirm an incident exists in an actual source, omit it. ' +
     'Prefer incidents with rich primary records (filings, tribunal decisions, official statements). ' +
-    'Candidate chapter concepts: ' + CONCEPTS.join('; ') + '. ' +
+    'Secondary targets, the other chapter concepts: ' + CONCEPTS.join('; ') + '. ' +
     'Report every search query you ran (required even if you found nothing: an unevidenced negative is treated as no information). ' +
     'Summaries state only what the sources state.',
     { label: 'sweep:' + m.key, phase: 'Sweep', model: 'sonnet', effort: 'medium', schema: SWEEP_SCHEMA }
@@ -101,6 +114,8 @@ const triage = await agent(
   'Merge duplicates (same incident found via different modalities keeps the union of its primary sources). ' +
   'Score each unique candidate 0-10 on: primary-record richness, fit to one of these chapter concepts (' +
   CONCEPTS.join('; ') + '), and legibility to a dual audience of eval leads and legal/executive readers. ' +
+  'The aggregate-scores/handoff concept is the priority: report its coverage FIRST in your notes, and if no ' +
+  'candidate serves it, state that as the headline finding. ' +
   'Flag risks (contested facts, ongoing litigation, thin record). Note which concepts have no strong candidate. ' +
   'Candidates as JSON:\n\n' + JSON.stringify(allCandidates),
   { label: 'triage', phase: 'Triage', effort: 'high', schema: TRIAGE_SCHEMA }

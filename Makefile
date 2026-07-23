@@ -1,6 +1,6 @@
 QUARTO ?= quarto
 STYLE_CHECK = ../../../.house-style/check-style-md.py
-QMD_FILES = index.qmd $(wildcard chapters/*.qmd)
+QMD_FILES = $(wildcard *.qmd) $(wildcard chapters/*.qmd)
 
 .PHONY: all preview check clean
 

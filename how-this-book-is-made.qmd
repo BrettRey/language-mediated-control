@@ -1,0 +1,13 @@
+# How this book is made {.unnumbered}
+
+This book is written with AI assistance, openly. The repository you're reading it from contains the machinery: a set of agent workflows under `.claude/workflows/` that sweep incident databases for candidate cases, check facts in draft chapters against verified case files, validate citations, and try to refute chapters before release. If you found that folder before you found this page, this page is the context it needs.
+
+The division of labour is fixed, and it runs the opposite way from what you might expect. Agent fleets do the checking; they don't do the writing. A harvesting fleet can propose a case, but no case fact enters a chapter until I've read the primary source myself (the court filing, the tribunal decision, the official statement) and archived it with a recorded hash.
+
+A verification fleet can flag a claim as unsupported, but it can't promote one to supported; that judgment stays human. Drafting is done in a single session where I direct, revise, and take responsibility for every sentence, with a language model as drafting and editing aid.
+
+Why say all this? Because the book's argument demands it. The book is about what evidence warrants: what an evaluation result licenses someone to conclude, and what to demand before signing off. A book making that argument owes its readers its own evidence trail. So chapters release at reviewable-draft quality only, versions are declared, released chapters are never silently rewritten, substantive changes go in a changelog, and every case chapter shows its sources. Where a claim in this book fails that standard, the failure is mine, and the revision will be visible.
+
+The models used are named in each release's changelog entry rather than here, because model names go stale faster than prose. The workflow definitions, model-sizing policy, and this page's history are all in the public repository, where they can be checked rather than taken on trust.
+
+I'm responsible for all claims, arguments, errors, and interpretive choices.

@@ -3,7 +3,7 @@ export const meta = {
   description: 'Pre-release audit of a chapter: facts vs case files, citations, style, adversarial review',
   whenToUse: 'Before any chapter release; args.chapter = path to the .qmd relative to repo root',
   phases: [
-    { title: 'Audit', detail: 'four dimensions in parallel, sized per task' },
+    { title: 'Audit', detail: 'six dimensions in parallel, sized per task' },
     { title: 'Merge', detail: 'rank surviving findings' },
   ],
 }
@@ -62,6 +62,36 @@ const DIMENSIONS = [
       'its findings verbatim as minor (major if a paragraph exceeds 120 words). Additionally scan the chapter for the ' +
       'AI-tic clusters in the house rules: praise-as-structure, restatement-as-revelation, unsupported evaluative ' +
       'participial tags, high-signal AI vocabulary. One finding per occurrence with the line number.',
+  },
+  {
+    // 2026-07-23 premortem patch: dual-audience register gate (dive 5 had no mitigation).
+    // A chapter is not releasable if either persona abandons before the diagnosability close.
+    key: 'register-eval-lead',
+    model: 'sonnet',
+    effort: 'medium',
+    prompt:
+      'Register audit, eval-lead persona. Read ' + ROOT + '/' + chapter + ' cover to cover as a busy evaluation ' +
+      'team lead: fluent in benchmarks, Messick, and bootstrap intervals; has already read the incident coverage; ' +
+      'reads to learn what to do differently. If there is a line where you would stop reading, report it as a ' +
+      'blocker ("abandonment: <reason>"). Major: passages restating what this reader already knows (case recaps ' +
+      'running past the argument, methods-101 checklists), and closes that read as obvious given the argument ' +
+      'above them. Minor: hedges or late-defined terms that slow this reader. If you would finish the chapter, ' +
+      'say so in one minor finding ("finished: <what the chapter gave you>").',
+  },
+  {
+    key: 'register-cto',
+    model: 'sonnet',
+    effort: 'medium',
+    prompt:
+      'Register audit, deployment-decision persona. Read ' + ROOT + '/' + chapter + ' cover to cover as a law-firm ' +
+      'CTO or general counsel: fluent in evidence standards, agency law, and procurement liability; not fluent in ' +
+      'formal notation or statistics; reads to learn what to demand before signing off. If there is a line where ' +
+      'you would stop reading, report it as a blocker ("abandonment: <reason>"), especially the first formula, ' +
+      'verdict-vector, or estimand passage that assumes training this reader lacks and is not carried by the ' +
+      'surrounding prose. Major: passages where an available legal analogue (hearsay, agency, evidence standards) ' +
+      'goes unused, and any stretch longer than two paragraphs with no concrete consequence for the deployment ' +
+      'decision. Minor: jargon glossed too late. If you would finish the chapter, say so in one minor finding ' +
+      '("finished: <what you would now demand>").',
   },
   {
     key: 'adversarial',

@@ -11,8 +11,8 @@ export const meta = {
 const ROOT = '/Users/brettreynolds/projects/LLM-CLI-projects'
 const PAPERS = [
   { key: 'adversarial-pragmatics', path: ROOT + '/papers/development/adversarial-pragmatics-for-ai-safety-evaluation/sections/' },
-  { key: 'delegation-assurance', path: ROOT + '/papers/development/adversarial-pragmatics-for-ai-safety-evaluation/assurance/delegation/' },
-  { key: 'evidentiary-assurance', path: ROOT + '/papers/development/adversarial-pragmatics-for-ai-safety-evaluation/assurance/evidentiary/' },
+  { key: 'delegation-assurance', path: ROOT + '/papers/development/adversarial-pragmatics-for-ai-safety-evaluation/sections-delegation/' },
+  { key: 'evidentiary-assurance', path: ROOT + '/papers/development/adversarial-pragmatics-for-ai-safety-evaluation/sections-evidentiary/' },
   { key: 'agi-evaluation', path: ROOT + '/papers/retarget/agi-evaluation/' },
 ]
 

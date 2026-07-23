@@ -10,6 +10,7 @@ book:
   repo-actions: [issue]
   chapters:
     - index.qmd
+    - how-this-book-is-made.qmd
 
 bibliography:
   - references.bib

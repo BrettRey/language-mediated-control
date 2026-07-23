@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premortem: Language-Mediated Control, Gate 1</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --panel:#111827; --panel2:#0f1522; --ink:#e5e9f2; --dim:#9aa5b8; --line:#232c3d;
+    --red:#f87171; --amber:#fbbf24; --green:#34d399; --blue:#60a5fa; --violet:#a78bfa; --cyan:#22d3ee; --rose:#fb7185; --orange:#fb923c; --lime:#a3e635; --teal:#2dd4bf;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:2rem 1.25rem 4rem}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:1.7rem;margin:.2rem 0 .3rem}
+  h2{font-size:1.25rem;margin:2.2rem 0 .8rem;border-bottom:1px solid var(--line);padding-bottom:.4rem}
+  .frame{color:var(--dim);font-style:italic;margin-bottom:1.6rem}
+  .verdict{background:linear-gradient(135deg,#2b1420,#1a1030);border:1px solid #5b2740;border-radius:12px;padding:1.1rem 1.3rem;margin:1.2rem 0 1.8rem}
+  .verdict b{color:var(--rose)}
+  .synth{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:.6rem}
+  .spanel{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:10px;padding:1rem 1.1rem}
+  .spanel.red{border-left-color:var(--red)} .spanel.amber{border-left-color:var(--amber)} .spanel.violet{border-left-color:var(--violet)}
+  .spanel h3{margin:.1rem 0 .5rem;font-size:1.02rem}
+  .spanel p{margin:.35rem 0;color:var(--ink);font-size:.94rem}
+  .muted{color:var(--dim)}
+  ol.rev{padding-left:1.2rem} ol.rev li{margin:.55rem 0;font-size:.95rem}
+  ul.check{list-style:none;padding-left:0} ul.check li{margin:.5rem 0;padding-left:1.6rem;position:relative;font-size:.95rem}
+  ul.check li::before{content:"☐";position:absolute;left:.2rem;color:var(--amber)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:1.1rem}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.05rem 1.2rem;border-top:4px solid var(--blue)}
+  .card h3{margin:.1rem 0 .45rem;font-size:1.03rem}
+  .chips{display:flex;gap:.45rem;margin:.2rem 0 .7rem;flex-wrap:wrap}
+  .chip{font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:.14rem .6rem;border:1px solid}
+  .lik-vh{color:#fecaca;border-color:#7f1d1d;background:#450a0a}
+  .lik-h{color:#fed7aa;border-color:#7c2d12;background:#431407}
+  .lik-m{color:#fde68a;border-color:#78350f;background:#422006}
+  .lik-lm{color:#bbf7d0;border-color:#14532d;background:#052e16}
+  .sev-vh{color:#fecaca;border-color:#7f1d1d;background:#450a0a}
+  .sev-h{color:#fed7aa;border-color:#7c2d12;background:#431407}
+  .sev-mh,.sev-m{color:#fde68a;border-color:#78350f;background:#422006}
+  .card p{font-size:.9rem;margin:.5rem 0;color:#cfd6e4}
+  .card .lbl{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:.8rem}
+  .card .assume{color:#fbd5e0}
+  .card ul{margin:.3rem 0 .2rem;padding-left:1.15rem} .card li{font-size:.88rem;margin:.3rem 0;color:#cfd6e4}
+  .c1{border-top-color:var(--red)} .c2{border-top-color:var(--violet)} .c3{border-top-color:var(--amber)} .c4{border-top-color:var(--rose)} .c5{border-top-color:var(--cyan)}
+  .c6{border-top-color:var(--blue)} .c7{border-top-color:var(--green)} .c8{border-top-color:var(--orange)} .c9{border-top-color:var(--teal)} .c10{border-top-color:var(--lime)}
+  .agents{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem}
+  .agent{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;font-size:.8rem;color:var(--dim)}
+  .agent b{color:var(--ink);font-weight:600;display:block;font-size:.82rem}
+  .ok{color:var(--green)}
+  footer{margin-top:3rem;color:var(--dim);font-size:.82rem;border-top:1px solid var(--line);padding-top:1rem}
+  code{background:#1b2333;border-radius:4px;padding:.05rem .35rem;font-size:.85em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Premortem: <em>Language-Mediated Control</em>, Gate 1</h1>
+  <div class="frame">It is late January 2027, six months from now. The book has failed. This report reconstructs why, before it happens.</div>
+
+  <div class="verdict"><b>Verdict: do not close Gate 1 on the current thesis and chapter list.</b> The synthesis is sound, but the plan's sharpest promises (the adversary, the sign-off method, the handoff case, the joint between the two problem families) are unauthored, and its calendar is undefended. Close Gate 1 only after the five checklist items below are in place.</div>
+
+  <h2>Synthesis</h2>
+  <div class="synth">
+    <div class="spanel red">
+      <h3>Most Likely Failure</h3>
+      <p><b>The stall that is already scheduled</b> (dives 3 + 8). Verification cost per case is unbounded and unknowable in advance; the sequencing rule guarantees the book only discretionary hours; the public repo converts the stall into a visible liability during the job search. No adversary or reader required: this is the default trajectory.</p>
+    </div>
+    <div class="spanel amber">
+      <h3>Most Dangerous Failure</h3>
+      <p><b>AI-authorship optics</b> (dive 10). The exposure is live now: a public fleet harness beside an empty chapters directory is exactly the screenshot that travels. It damages the author and the job-search channel, not just the book, and it can fire before any chapter exists to answer it. Insurance is cheap and available this week.</p>
+    </div>
+    <div class="spanel violet">
+      <h3>The Hidden Assumption</h3>
+      <p><b>"The four papers contain the book."</b> Dives 1, 2, 4, and 6 are one assumption four ways: the thesis's sharpest commitments (adversary, sign-off method, handoff case, the two-family joint) are precisely the parts no source paper wrote. They must be authored or found, not synthesized.</p>
+    </div>
+  </div>
+
+  <h2>The Revised Plan</h2>
+  <ol class="rev">
+    <li><b>Thesis surgery before Gate 1 closes</b> (maps 1, 6): demote the security clause to worked illustration, or commit to acquiring the missing base. Require at least one committed early chapter whose case needs <em>both</em> problem families to resolve (Deloitte is the natural candidate: fabricated references in an assurance report are a whose-words case and an evidence-reach case at once).</li>
+    <li><b>Harvest the handoff case first</b> (maps 4): case-harvest's primary query is chapter 5's target, a named, paper-trailed instance of an eval claim reaching a decision-maker and failing to warrant the decision. Gate 1 does not close while chapter 5 reads "TBD". If harvesting finds nothing, that forces an explicit thesis reframe, not a quiet slide into the liability-casebook genre.</li>
+    <li><b>Source-viability probes before chapter commitment</b> (maps 3): one bounded probe per candidate case. Expect Tahoe to fail the probe; drop or demote by evidence, not vividness.</li>
+    <li><b>Spike the decision layer at note scale</b> (maps 2): a 2-3 page method sketch (typed verdict vector + graded projectibility + declared losses → a worked toy sign-off) through the review board before Gate 1 closes. If it doesn't survive, the book's promise honestly narrows to "what to demand", stated up front.</li>
+    <li><b>Distribution and optics floors as Gate 1 exit criteria</b> (maps 7, 10): mailing list, analytics, the Books in Progress email actually sent, an announcement plan; plus a prominent how-this-book-is-made page and some visible prose now, so the repo is never "agents, zero chapters". Decide explicitly whether the fleet harness stays public.</li>
+    <li><b>Calendar defense with a kill-or-continue date</b> (maps 8, 9): a standing weekly slot with referee-deadline status; the week-8 tripwire on the preface placeholder; a named review date (suggest 2026-10-01) at which the book is continued, rescoped, or paused. Chapters whose spine depends on a formalism under peer review wait for that review.</li>
+  </ol>
+
+  <h2>Pre-Launch Checklist</h2>
+  <ul class="check">
+    <li>Source-viability probe completed for all six candidate cases; every committed chapter has a confirmed primary layer.</li>
+    <li>One verified handoff case in <code>cases/</code>, or an explicit thesis reframe on record, before Gate 1 closes.</li>
+    <li>Decision-layer spike note written and survived a review-board pass.</li>
+    <li>Distribution floor: list live, analytics wired, Books in Progress email sent, announcement plan written.</li>
+    <li>Methods page live and visible prose published, so the repo is never "agents, zero chapters".</li>
+  </ul>
+
+  <h2>The Ten Failure Modes</h2>
+  <div class="cards">
+
+    <div class="card c1">
+      <h3>1 · Security chapter has no parent paper</h3>
+      <div class="chips"><span class="chip lik-h">Likelihood: med-high</span><span class="chip sev-h">Severity: high (thesis)</span></div>
+      <p>The Tahoe chapter got drafted fast because it was vivid, borrowing "adversary" and "attack surface" from a vocabulary no source paper defines (AP's "adversarial" means evaluation conditions, not a hostile party). Professional red-teamers flagged the missing threat model; "amateur" got quoted. The fix required a fifth source paper that didn't exist, and by December "security is the stress case" had deflated to "security is illustrative", costing the thesis its sharpest clause.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Because AP uses the word "adversarial" and the author writes fluently about pragmatics, a security chapter already exists; in fact it is a miscommunication chapter borrowing security's vocabulary without its object.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>A chapter draft uses "adversary"/"attack"/"exploit" while citing only AP, DA, EA, or AGI.</li><li>Gate 1's log shows no line item closing G1 before the Tahoe chapter is drafted.</li></ul>
+    </div>
+
+    <div class="card c2">
+      <h3>2 · The decision layer never gets authored</h3>
+      <div class="chips"><span class="chip lik-h">Likelihood: high</span><span class="chip sev-h">Severity: high (payoff)</span></div>
+      <p>Five diagnostic chapters released and landed; then came the chapter the book pointed at, where the CTO learns how to sign. The schema named the slots (risk measure, decision criterion, losses) but not the method that fills them; writing it was new decision-theoretic work, not synthesis, and it kept losing to paper deadlines. <code>chapters/06</code> was reopened a dozen times with no paragraph surviving two sessions. A reader asked "so what am I supposed to do with a 94%?" and the book never answered.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Naming the schema's fields in July meant chapter 6 was mostly done; naming slots and authoring a method to fill them are different orders of difficulty.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Repeated deletions/rewrites of chapter 6's opening across months, no draft surviving.</li><li>Gate 2's paper threshold arrives while chapter 6 is unwritten and "the book runs behind the papers" absorbs the stall as normal.</li></ul>
+    </div>
+
+    <div class="card c3">
+      <h3>3 · Verification cost throttles cadence to zero</h3>
+      <div class="chips"><span class="chip lik-h">Likelihood: high</span><span class="chip sev-h">Severity: high (cadence)</span></div>
+      <p>Avianca's docket ate three weekends via PACER; the Tahoe case turned out to have no primary layer at all (screenshots, and press citing the screenshots); Deloitte's refund figure lived only in press, not in either primary document. Each discovery came mid-chapter because nothing was probed before committing the slot. One chapter shipped by January; the two-week Brand cadence never started; readership, which needed cadence, never built.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">"Verify against primary sources" is a fixed, boundable cost per case, rather than a variable one running from a day to indefinite with no way to know in advance.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Zero case files move from "sources identified" to "verified" (archived, hashed) within three weeks of case-harvest running.</li><li><code>cases/</code> holds more "primary source thin/unavailable" flags than entries with a path and hash.</li></ul>
+    </div>
+
+    <div class="card c4">
+      <h3>4 · The cases carry a different book than the thesis</h3>
+      <div class="chips"><span class="chip lik-h">Likelihood: high</span><span class="chip sev-h">Severity: high (identity)</span></div>
+      <p>Effort went to hardening the four easy cases in hand (Avianca, Moffatt, Tahoe, Deloitte), all confabulation/liability stories in a genre AI Snake Oil already owns. Chapter 5's handoff case stayed "TBD from harvesting" because nobody could find a paper-trailed instance of a benchmark score misleading a real deployer. Chapters 1-4 read as a complete, satisfying casebook ("AI Snake Oil with footnotes"), drafts overtook the thesis they were meant to test, and the distinctive book died inside a generic one.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">A case matching the book's real subject would turn up from the same harvesting that surfaced the easy chatbot-liability cases.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Chapter 5 still "TBD" after chapters 1-4 have verified, hashed case files.</li><li>The concordance's G10 finding sits unactioned instead of blocking Gate 1.</li></ul>
+    </div>
+
+    <div class="card c5">
+      <h3>5 · Dual-audience register fails chapter by chapter</h3>
+      <div class="chips"><span class="chip lik-m">Likelihood: medium</span><span class="chip sev-mh">Severity: med-high</span></div>
+      <p>Eval leads found the Avianca recap slow (they'd read three write-ups already) and the closing checklists thin; CTO readers hit the Stand_R display block in chapter 2 and never reached the close built for them. GitHub issues grew two organic tags, "more law" and "more math"; a softening sidebar satisfied neither camp. Analytics: strong chapter-1 traffic, cliff-shaped chapter-2 abandonment at a specific equation.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">A shared case opener and shared closing question produce a shared reading experience, when each reader hits their difficulty ceiling at a different sentence in between.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Comment bifurcation by chapter 2: "obvious/well-known" vs "lost me at [formula]".</li><li>Dwell-time cliff at a display equation; chapter-2 abandonment far exceeds chapter-1's.</li></ul>
+    </div>
+
+    <div class="card c6">
+      <h3>6 · Two books stapled at the preface</h3>
+      <div class="chips"><span class="chip lik-m">Likelihood: medium</span><span class="chip sev-h">Severity: high (print)</span></div>
+      <p>The pragmatics chapters read as AI-liability commentary; the projection chapter as eval-methodology critique; each drew its own audience and neither saw the other. Every case resolved on one problem family alone, so the joint stayed a preface paragraph, never necessary to any chapter's argument. Serialization hid the seam (one reader, one chapter, one family) until a publisher's reader read all six in sequence and delivered the structural verdict the author's own thesis doc had predicted: two books.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Naming the shared mechanism in the preface functions as connective tissue even though no chapter's case requires both families to resolve.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>By chapter 3, no case file needs both an authorization predicate and a generalizability facet for its verdict.</li><li>Per-chapter referrer/citation clusters are disjoint with near-zero overlap.</li></ul>
+    </div>
+
+    <div class="card c7">
+      <h3>7 · Released into silence</h3>
+      <div class="chips"><span class="chip lik-h">Likelihood: high</span><span class="chip sev-mh">Severity: med-high</span></div>
+      <p>Chapter 1: one LinkedIn post, eleven likes, no list to capture the eval leads who clicked through. Books in Progress stayed "worth an email when the time comes" forever, its own hedge becoming permission to defer. Chapter 2 released with no post at all. No analytics existed, so Gate 2's "real readership" was judged from GitHub stars and gut feeling; the empty signal was misread as failed content and a viable book was shelved, with no way to distinguish "nobody read it" from "readers shrugged".</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Writing a distribution habit into the plan is equivalent to having one, and quality work generates its own visibility the way indexed papers accrue citations.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Three weeks post-scaffold: no signup exists anywhere and no one has been asked to subscribe.</li><li>The Books in Progress email is still a bullet in notes/, not a sent message, two weeks before chapter 1 ships.</li></ul>
+    </div>
+
+    <div class="card c8">
+      <h3>8 · Sequencing starvation, public stall</h3>
+      <div class="chips"><span class="chip lik-vh">Likelihood: very high</span><span class="chip sev-h">Severity: high</span></div>
+      <p>Study B data collection ate the evening slots; two referee reports landed in one October week; the REB cleared in November and unblocked two experiments on schedule; a December interview loop took the rest. No chapter was ever explicitly deprioritized; the book just lost every week to something with a harder deadline. By January the public preface still said "there is nothing here but this page", five months stale, in search results beside the author's name during the exact interview cycle it was meant to support.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Evening momentum from a good scaffolding session translates into a recurring weekly slot, without a calendar slot or a deadline of the kind the papers have.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Zero commits to <code>chapters/</code> or <code>cases/</code> in any 3-week window.</li><li>"Nothing here but this page" still literally true past week 8: a fired tripwire, not a status update.</li></ul>
+    </div>
+
+    <div class="card c9">
+      <h3>9 · Source-paper drift outruns version discipline</h3>
+      <div class="chips"><span class="chip lik-m">Likelihood: medium</span><span class="chip sev-m">Severity: medium</span></div>
+      <p>A referee rejected AP's rebuilt decision rule and forced renamings that the book's canonical schema couldn't absorb, because the schema froze vocabulary while the referee attacked claim architecture. The no-silent-rewrite protocol made every propagation maximally visible; the changelog filled with "revised because the underlying paper changed"; a reader noted publicly that "the terminology has changed under me twice since I started". The authority the serialization was meant to accumulate eroded through the book's own transparency.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Version tags and a canonical vocabulary can absorb referee-driven change, when referees attack arguments and formalisms, not the wording layer the schema froze.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>"Underlying paper changed" changelog entries outnumber the book's own editorial judgments within two released chapters.</li><li>A chapter releases before its cited paper has entered peer review at all.</li></ul>
+    </div>
+
+    <div class="card c10">
+      <h3>10 · AI-authorship optics capture the frame</h3>
+      <div class="chips"><span class="chip lik-lm">Likelihood: low-med</span><span class="chip sev-vh">Severity: very high</span></div>
+      <p>An eval-community account opened <code>.claude/workflows/</code> before <code>index.qmd</code>. The screenshot that travelled: the fleet folder beside an empty chapters directory, captioned "AI safety book written by AI agents. Currently has zero chapters." The disclosure nuance never outran the compression; "the Claude book" became the durable first impression; chapter 1 later posted to an audience primed to hunt AI tells rather than read the argument. The job-search channel was poisoned first: hiring managers found the meme before the book.</p>
+      <div class="lbl">Underlying assumption</div>
+      <p class="assume">Disclosure artifacts read as evidence of rigor, to an audience that at trade-visibility scale reads them as evidence of the crime.</p>
+      <div class="lbl">Early warnings</div>
+      <ul><li>Repo traffic spikes with <code>.claude/</code> paths outnumbering <code>index.qmd</code> reads.</li><li>Any external mention names "agents" or "Claude" before it names the book's subject.</li></ul>
+    </div>
+
+  </div>
+
+  <h2>Investigation Fleet</h2>
+  <div class="agents">
+    <div class="agent"><b>security orphan</b><span class="ok">done</span> · sonnet · 46k tok</div>
+    <div class="agent"><b>decision layer</b><span class="ok">done</span> · sonnet · 46k tok</div>
+    <div class="agent"><b>verification bottleneck</b><span class="ok">done</span> · sonnet · 46k tok</div>
+    <div class="agent"><b>case-thesis mismatch</b><span class="ok">done</span> · sonnet · 46k tok</div>
+    <div class="agent"><b>register failure</b><span class="ok">done</span> · sonnet · 45k tok</div>
+    <div class="agent"><b>two books stapled</b><span class="ok">done</span> · sonnet · 46k tok</div>
+    <div class="agent"><b>silent launch</b><span class="ok">done</span> · sonnet · 45k tok</div>
+    <div class="agent"><b>starvation stall</b><span class="ok">done</span> · sonnet · 45k tok</div>
+    <div class="agent"><b>source drift</b><span class="ok">done</span> · sonnet · 45k tok</div>
+    <div class="agent"><b>AI-authorship optics</b><span class="ok">done</span> · sonnet · 45k tok</div>
+  </div>
+  <p class="muted" style="font-size:.85rem">10/10 investigators completed, ~456k subagent tokens total. Synthesis by the primary session (Fable). Full verbatim dives: <code>notes/premortem-transcript-2026-07-23-095245.md</code>.</p>
+
+  <footer>
+    Premortem of Gate 1 (thesis paragraph + chapter list) for <em>Language-Mediated Control</em> · run 2026-07-23 09:52 ET · inputs: thesis-and-chapters.md, project-brief.md, paper-concordance.md, projection-declaration-schema.md, repo state
+  </footer>
+</div>
+</body>
+</html>
