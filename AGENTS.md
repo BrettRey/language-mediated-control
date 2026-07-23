@@ -37,6 +37,17 @@ Brett's standing instruction: use appropriately sized models and efforts.
 
 Fleets verify; one session drafts. Mass parallelism goes to the case file and verification, never to prose.
 
+## Workflow Harness
+
+Executable fleet workflows live in `.claude/workflows/` (see its README for invocation and discipline):
+
+- `paper-concordance.js` ~-- map claims, terms, and contradictions across the four source papers (pre-Gate-1 input)
+- `case-harvest.js` ~-- multi-modal sweep for documented incidents
+- `case-verify.js` ~-- per-case read → adversarial refutation → failure typing pipeline
+- `chapter-verify.js` ~-- pre-release chapter audit (facts, citations, style, adversarial review); a chapter releases only if this returns zero blockers
+
+Workflows are on-demand, not cron. They return data for human review; they never write project files themselves. Fleet output upgrades a claim to "sources identified", never to "verified" ~-- verified still requires the primary source read and archived.
+
 ## Gates
 
 - **Gate 1 (open):** thesis paragraph and chapter list pressure-tested before any chapter drafting. Working doc: `notes/thesis-and-chapters.md`.

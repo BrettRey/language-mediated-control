@@ -19,4 +19,6 @@
 
 2026-07-22 — Standing model-sizing policy (Brett's instruction "appropriately sized models and efforts"): haiku/low for hygiene sweeps, sonnet/medium for case harvesting and first-pass verification, strongest model for thesis, structure, and drafting. Fleets verify; one session drafts.
 
+2026-07-22 — Workflow harness authored in `.claude/workflows/`: paper-concordance, case-harvest, case-verify, chapter-verify, each with per-stage model sizing (haiku hygiene, sonnet read/refute/harvest, strongest-model synthesis/typing/adversarial). Design: Cherny loops inverted ~-- fleets verify, one session drafts. On-demand invocation only, no cron loops (subscription usage windows; project sequenced behind paper revisions). Workflows return data; humans materialize files; fleet verification never confers "verified" status.
+
 2026-07-22 — Two-gate commitment structure. Gate 1: thesis paragraph + chapter list pressure-tested before drafting. Gate 2: full-book commitment only after two released chapters show traction and ≥2 of the 4 source papers land peer-reviewed. Sequencing: after current paper-revision obligations. Exclusion: no Nefdt-collaboration material anywhere in the project (no-LLM agreement).

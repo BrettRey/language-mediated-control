@@ -11,7 +11,7 @@ Conversation of 2026-07-22 in the adversarial-pragmatics repo: the book the four
 
 ## Next Action
 
-Gate 1: pressure-test the thesis paragraph and candidate chapter list in `notes/thesis-and-chapters.md` (premortem or review-board pass), then start the case file with fleet verification of the four candidate cases.
+Gate 1: run `.claude/workflows/paper-concordance.js` for the cross-paper claim map (its contradictions list feeds the pressure test), then premortem/review-board the thesis and chapter list in `notes/thesis-and-chapters.md`. After Gate 1: `case-harvest.js` and `case-verify.js` to build the case file. Workflow harness authored 2026-07-22, not yet run.
 
 ## Blockers
 
