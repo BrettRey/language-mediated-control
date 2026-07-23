@@ -22,3 +22,9 @@ Gate 1: run `.claude/workflows/paper-concordance.js` for the cross-paper claim m
 
 - **Gate 1 (open):** thesis + chapter list pressure-tested before chapter drafting.
 - **Gate 2 (closed until):** two released chapters with real readership, and ≥2 of the 4 source papers peer-review published.
+
+### 2026-07-22 Session Notes
+
+- Project conceived and scaffolded in one evening session that began as a Cherny-"loops" discussion in the adversarial-pragmatics repo; full rationale in `notes/project-brief.md`.
+- Committed and pushed: scaffold (b62d4ea) and fleet workflow harness (60726cf) to public GitHub.
+- Open for Brett: license sign-off (CC BY-NC-ND provisional vs CC BY habit).
